@@ -1,5 +1,6 @@
 class Room:
-    def __init__(self, name, description, n_to=None, e_to=None, s_to=None, w_to=None):
+    ## Default params because only one selection is made at a time
+    def __init__(self, name, description, items=[], n_to=None, e_to=None, s_to=None, w_to=None):
         self.name = name
         self.description = description
         self.connections = {
@@ -8,4 +9,4 @@ class Room:
             'e' : s_to,
             'w' : w_to
         }
-       
+        self.items = items
