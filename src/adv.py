@@ -1,4 +1,6 @@
 from room import Room
+from player import Player
+import textwrap
 
 # Declare all the rooms
 
@@ -24,18 +26,19 @@ earlier adventurers. The only exit is to the south."""),
 
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room['outside'].connections['n'] = room['foyer']
+room['foyer'].connections['s'] = room['outside']
+room['foyer'].connections['n'] = room['overlook']
+room['foyer'].connections['e'] = room['narrow']
+room['overlook'].connections['s'] = room['foyer']
+room['narrow'].connections['w'] = room['foyer']
+room['narrow'].connections['n'] = room['treasure']
+room['treasure'].connections['s'] = room['narrow']
 
-#
 # Main
-#
+# Welcome message
+# print('Welcome to the game! What should we call you?')
+# user = input('Name:')
 
 # Make a new player object that is currently in the 'outside' room.
 
@@ -44,8 +47,30 @@ room['treasure'].s_to = room['narrow']
 # * Prints the current room name
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
+
 #
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+        
+print('-----------------------------------------------\nWelcome to the game! What should we call you?\n-----------------------------------------------')
+player = Player(input('Name:'), room['outside'])
+print(f'\n===============================================\n{player.name}, your jorney begins {player.current_room.name}\n===============================================\n')
+
+user_is_playing = True
+
+while user_is_playing:
+    print('\n')
+    for line in textwrap.wrap(player.current_room.description):
+        print(line)
+
+    user_input = input('\nWhich direction would you like to go?\n Type n,s,e, or w to move\n Type q to quit\nYour selection:  ')
+    
+    if user_input in ['n', 'e', 's', 'w']:
+        player.move(user_input)
+    elif user_input == 'q':
+        print('\nThank you for playing!\nGoodbye!\n-----------------------------------------------')
+        user_is_playing = False
+    elif user_input != ['n', 'e', 's', 'w', 'q']:
+        print(f'\n{player.name}, {user_input} is not a direction.\n')
